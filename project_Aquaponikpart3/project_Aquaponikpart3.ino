@@ -11,7 +11,6 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-// Konfigurasi WiFi
 const char* ssid = "Galaxy A32";
 const char* password = "11111111";
 
@@ -40,49 +39,46 @@ String LoRaMessage = "";
 int readingID = 0;
 
 
-// Inisialisasi sensor suhu
 #define ONE_WIRE_BUS 23
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
-Servo myservo; // membuat variabel servo untuk dikendalikan
+Servo myservo;
 
-int pos = 20; // deklarasi variabel untuk posisi sudut
+int pos = 20; 
 int pos1 = 67; 
 
 #define TdsSensorPin 35
-#define VREF 5      // analog reference voltage(Volt) of the ADC
-#define SCOUNT 30           // sum of sample point
-int analogBuffer[SCOUNT];    // store the analog value in the array, read from ADC
+#define VREF 5      
+#define SCOUNT 30           
+int analogBuffer[SCOUNT];    
 int analogBufferTemp[SCOUNT];
 int analogBufferIndex = 0,copyIndex = 0;
 float averageVoltage = 0,tdsValue = 0,temperature = 25;
 
-Adafruit_ADS1115 ads;  // Inisialisasi ADS1115 ADC
-
+Adafruit_ADS1115 ads;  
 long lastMsg = 0;
 char msg[50];
 
 
-const int pompa_akuarium = 17; //inisialisasi pin relay
+const int pompa_akuarium = 17; 
 const int aerator = 16;
 int pompa_pupuk_output = 13;
 int pompa_pupuk = 15;
 int fishfeeder = 4;
 
 
-int Aa = 8, Bb = 18;  //waktu pompa akuarium menyala (jam)
-int Cc = 7;           //waktu pompa pupuk dan pompa_pupuk_output menyala (jam)
-int Dd = 0, Ee = 2;   //waktu pompa pupuk dan pompa_pupuk_output menyala (menit)
-int Ff = 6, Gg = 19;  //waktu fish feeder menyala (jam)
-int Hh = 0, Ii = 1;   //waktu fish feeder menyala (menit)
+int Aa = 8, Bb = 18;  
+int Cc = 7;          
+int Dd = 0, Ee = 2;   
+int Ff = 6, Gg = 19;
+int Hh = 0, Ii = 1;   
 float ph = 0;
 float ph_step;
 
 double teganganph;
 
 
-//untuk kalibrasi
 float ph4= 2.080;
 float ph7 =1.905;
 
@@ -156,7 +152,6 @@ void setup () {
 }
 
 void loop () {
-// coding menerima data relay
  if (LoRa.parsePacket()){
       LoRaMessage1 += (char)LoRa.read();
   
@@ -186,7 +181,6 @@ void loop () {
   }
 realtimeclock();
 aktuator();
-//coding ph sensor
 const int16_t nilai_analog_ph = ads.readADC_SingleEnded(0)/14.88;
 Serial.print("Nilai ADC ph =");
 Serial.println(nilai_analog_ph);
@@ -198,7 +192,7 @@ Serial.print(teganganph,3);
 ph_step=(ph4-ph7)/3;
 ph = 7.00+((ph7-teganganph)/ph_step);
     Serial.print("  pH Value: ");
-    Serial.println(ph, 2); //Menampilkan hasil pembacaan pH pada serial monitor
+    Serial.println(ph, 2);
 sensor();
  delay(1000);
   }
